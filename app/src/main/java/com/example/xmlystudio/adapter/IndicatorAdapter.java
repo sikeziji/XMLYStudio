@@ -41,13 +41,15 @@ public class IndicatorAdapter extends CommonNavigatorAdapter {
 
 
     @Override
-    public IPagerTitleView getTitleView(Context context, int index) {
+    public IPagerTitleView getTitleView(Context context, final int index) {
         //创建View
         SimplePagerTitleView simplePagerTitleView = new ColorTransitionPagerTitleView(context);
         //设置一般情况下颜色为灰色
         simplePagerTitleView.setNormalColor(Color.GRAY);
         //设置选中情况下颜色为黑色
         simplePagerTitleView.setSelectedColor(Color.WHITE);
+        //设置单位
+        simplePagerTitleView.setTextSize(18);
         //设置显示的内容
         simplePagerTitleView.setText(title[index]);
         //设置title的点击事件，如果点击了title，那么就选中下面的viewPager到队形的index 里面去
@@ -55,7 +57,10 @@ public class IndicatorAdapter extends CommonNavigatorAdapter {
         simplePagerTitleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //切换viewPager的内容，如果index不一样的话
+                //切换viewPager的内容，如果index不一样的话
+                if (mOnIndicatorTapClickListener != null) {
+                    mOnIndicatorTapClickListener.onTabClick(index);
+                }
             }
         });
         return simplePagerTitleView;
@@ -69,8 +74,12 @@ public class IndicatorAdapter extends CommonNavigatorAdapter {
         return indicator;
     }
 
+    public void setOnIndicatorTapClickListener(OnIndicatorTapClickListener listener) {
+        this.mOnIndicatorTapClickListener = listener;
+    }
 
-    interface OnIndicatorTapClickListener {
+
+   public  interface OnIndicatorTapClickListener {
         void onTabClick(int index);
     }
 }

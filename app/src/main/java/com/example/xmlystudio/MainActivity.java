@@ -27,12 +27,29 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "TestActivity";
     private MagicIndicator mMagicIndicator;
     private ViewPager contentPager;
+    private IndicatorAdapter indicatorAdapter;
+    private ViewPager mContentPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+
+        initEvent();
+    }
+
+    private void initEvent() {
+        indicatorAdapter.setOnIndicatorTapClickListener(new IndicatorAdapter.OnIndicatorTapClickListener() {
+            @Override
+            public void onTabClick(int index) {
+                if(mContentPager != null) {
+                    mContentPager.setCurrentItem(index,false);
+                }
+            }
+        });
+
+
     }
 
     /**
@@ -42,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
         mMagicIndicator = this.findViewById(R.id.main_indicator);
         mMagicIndicator.setBackgroundColor(this.getResources().getColor(R.color.main_color));
         //创建indicator的适配器
-        IndicatorAdapter adapter = new IndicatorAdapter(this);
+        indicatorAdapter = new IndicatorAdapter(this);
         CommonNavigator commonNavigator = new CommonNavigator(this);
-        commonNavigator.setAdapter(adapter);
+        commonNavigator.setAdapter(indicatorAdapter);
 
         //ViewPager
         contentPager = this.findViewById(R.id.content_pager);
