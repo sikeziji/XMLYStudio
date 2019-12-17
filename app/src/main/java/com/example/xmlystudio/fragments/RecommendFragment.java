@@ -1,16 +1,20 @@
 package com.example.xmlystudio.fragments;
 
+import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.xmlystudio.R;
 import com.example.xmlystudio.adapter.RecommendListAdapter;
 import com.example.xmlystudio.base.BaseFragment;
+import com.example.xmlystudio.interfaces.IRecommendPresenter;
+import com.example.xmlystudio.presenters.RecommendPresenter;
 import com.example.xmlystudio.utils.Constants;
 import com.example.xmlystudio.utils.LogUtil;
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
@@ -18,6 +22,8 @@ import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
 import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
 import com.ximalaya.ting.android.opensdk.model.album.GussLikeAlbumList;
+
+import net.lucode.hackware.magicindicator.buildins.UIUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +35,7 @@ public class RecommendFragment extends BaseFragment {
     private View view;
     private RecyclerView mRecommendRv;
     private RecommendListAdapter recommendListAdapter;
+    private RecommendPresenter mRecommendPresenter;
 
     @Override
     protected View onSubViewLoaded(LayoutInflater inflater, ViewGroup container) {
@@ -45,6 +52,16 @@ public class RecommendFragment extends BaseFragment {
         //设置layoutManager
         mRecommendRv.setLayoutManager(linearLayoutManager);
 
+        mRecommendRv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                outRect.top = UIUtil.dip2px(view.getContext(), 5);
+                outRect.bottom = UIUtil.dip2px(view.getContext(), 5);
+                outRect.left = UIUtil.dip2px(view.getContext(), 5);
+                outRect.right = UIUtil.dip2px(view.getContext(), 5);
+            }
+        });
+
         //3.设置适配器
         recommendListAdapter = new RecommendListAdapter();
         mRecommendRv.setAdapter(recommendListAdapter);
@@ -52,6 +69,11 @@ public class RecommendFragment extends BaseFragment {
 
         //去拿数据回来
         getRecommendData();
+
+        //获取到逻辑层的对象
+        mRecommendPresenter = RecommendPresenter.getInstance();
+        //获取推荐列表内容
+        mRecommendPresenter.getRecommendList();
 
         //返回View ，给界面显示
         return view;

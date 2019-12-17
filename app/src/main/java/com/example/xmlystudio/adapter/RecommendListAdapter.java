@@ -81,7 +81,7 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
             //设置描述
             album_description_tv.setText(album.getAlbumIntro());
             //设置播放次数
-            album_play_count.setText(album.getPriceTypeDetails());
+            album_play_count.setText(album.getPlayCount()/10000 + "万");
             // 设置专辑数量
             album_content_size.setText(album.getIncludeTrackCount() + "");
 
