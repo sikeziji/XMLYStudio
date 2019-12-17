@@ -1,7 +1,9 @@
 package com.example.xmlystudio.utils;
 
 import com.example.xmlystudio.base.BaseFragment;
+import com.example.xmlystudio.fragments.HistoryFragment;
 import com.example.xmlystudio.fragments.RecommendFragment;
+import com.example.xmlystudio.fragments.SubscriptionFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +35,10 @@ public class FragmentCreator {
                 baseFragment = new RecommendFragment();
                 break;
             case INDEX_SUBSCRIPITON:
+                baseFragment = new SubscriptionFragment();
                 break;
             case INDEX_HISTORY:
+                baseFragment = new HistoryFragment();
                 break;
         }
 

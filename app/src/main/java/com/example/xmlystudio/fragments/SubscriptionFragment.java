@@ -1,0 +1,19 @@
+package com.example.xmlystudio.fragments;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.example.xmlystudio.R;
+import com.example.xmlystudio.base.BaseFragment;
+
+public class SubscriptionFragment extends BaseFragment {
+    private View view;
+
+    @Override
+    protected View onSubViewLoaded(LayoutInflater inflater, ViewGroup container) {
+        view = inflater.inflate(R.layout.fragment_subscription, container,false);
+
+        return view;
+    }
+}
