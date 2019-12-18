@@ -19,4 +19,17 @@ public interface IRecommendPresenter {
      */
     void loadMore();
 
+
+    /**
+     * 注册UI的回调注册
+     * @param callback
+     */
+    void  registerViewCallback(IRecommendViewCallback callback);
+
+
+    /**
+     * 取消UI的回调注册
+     * @param callback
+     */
+    void unRegistViewCallback(IRecommendViewCallback callback);
 }
