@@ -15,7 +15,9 @@
 
         <com.example.xmlystudio.views.LoadingView
             android:layout_width="24dp"
-            android:layout_height="24dp"/>
+            android:layout_height="24dp"
+            android:src="@mipmap/loading"
+            />
 
 
     <TextView

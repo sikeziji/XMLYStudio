@@ -1,31 +1,18 @@
 package com.example.xmlystudio;
 
+import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
-import android.icu.util.ULocale;
-import android.net.wifi.hotspot2.ConfigParser;
-import android.os.Bundle;
-
 import com.example.xmlystudio.adapter.IndicatorAdapter;
 import com.example.xmlystudio.adapter.MainContentAdapter;
-import com.example.xmlystudio.utils.LogUtil;
-import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
-import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
-import com.ximalaya.ting.android.opensdk.model.category.Category;
-import com.ximalaya.ting.android.opensdk.model.category.CategoryList;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import okhttp3.ResponseBody;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "TestActivity";

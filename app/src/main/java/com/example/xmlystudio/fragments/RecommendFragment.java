@@ -15,6 +15,7 @@ import com.example.xmlystudio.R;
 import com.example.xmlystudio.adapter.RecommendListAdapter;
 import com.example.xmlystudio.base.BaseFragment;
 import com.example.xmlystudio.interfaces.IRecommendViewCallback;
+import com.example.xmlystudio.presenters.AlbumDetailPresenter;
 import com.example.xmlystudio.presenters.RecommendPresenter;
 import com.example.xmlystudio.utils.LogUtil;
 import com.example.xmlystudio.views.UILoader;
@@ -141,7 +142,6 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
     public void onLoading() {
         LogUtil.d(TAG,"onLoading");
         mUiLoader.updateStatus(UILoader.UIStatus.LOADING);
-
     }
 
     @Override
@@ -155,7 +155,8 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
     }
 
     @Override
-    public void onItemClick(int position) {
+    public void onItemClick(int position , Album album) {
+        AlbumDetailPresenter.getInstance().setTargetAlbum(album);
         //Item被点击了,跳转到详情界面
         Intent intent = new Intent(getContext(), DetailActivity.class);
         startActivity(intent);

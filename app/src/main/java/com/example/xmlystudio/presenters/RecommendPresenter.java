@@ -3,7 +3,6 @@ package com.example.xmlystudio.presenters;
 import com.example.xmlystudio.interfaces.IRecommendPresenter;
 import com.example.xmlystudio.interfaces.IRecommendViewCallback;
 import com.example.xmlystudio.utils.Constants;
-import com.example.xmlystudio.utils.LogUtil;
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
 import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
@@ -14,8 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.security.auth.callback.Callback;
 
 public class RecommendPresenter implements IRecommendPresenter {
 
@@ -58,7 +55,7 @@ public class RecommendPresenter implements IRecommendPresenter {
         //封装参数
         updateLoading();
         Map<String, String> map = new HashMap<>();
-        map.put(DTransferConstants.LIKE_COUNT, Constants.RECOMMAND_COUNT + "");
+        map.put(DTransferConstants.LIKE_COUNT, Constants.COUNT_RECOMMAND + "");
         CommonRequest.getGuessLikeAlbum(map, new IDataCallBack<GussLikeAlbumList>() {
             @Override
             public void onSuccess(GussLikeAlbumList gussLikeAlbumList) {

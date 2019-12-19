@@ -73,7 +73,7 @@ public abstract class UILoader extends FrameLayout {
             addView(mLoadingView);
         }
         //根据状态设置是否可见
-        mLoadingView.setVisibility(mCurrentStatus == UIStatus.LOADING ? VISIBLE : GONE);
+        mLoadingView.setVisibility(mCurrentStatus == UIStatus.LOADING ? View.VISIBLE : View.GONE);
 
 
         //成功
@@ -82,7 +82,7 @@ public abstract class UILoader extends FrameLayout {
             addView(mSuccessView);
         }
         //根据状态设置是否可见
-        mSuccessView.setVisibility(mCurrentStatus == UIStatus.SUCCESS ? VISIBLE : GONE);
+        mSuccessView.setVisibility(mCurrentStatus == UIStatus.SUCCESS ? View.VISIBLE : View.GONE);
 
 
         //失败
@@ -91,7 +91,7 @@ public abstract class UILoader extends FrameLayout {
             addView(mNetworkErrorView);
         }
         //根据状态设置是否可见
-        mNetworkErrorView.setVisibility(mCurrentStatus == UIStatus.ERROR ? VISIBLE : GONE);
+        mNetworkErrorView.setVisibility(mCurrentStatus == UIStatus.ERROR ? View.VISIBLE : View.GONE);
 
 
         //返回数据为空
@@ -100,7 +100,7 @@ public abstract class UILoader extends FrameLayout {
             addView(mEmptyView);
         }
         //根据状态设置是否可见
-        mEmptyView.setVisibility(mCurrentStatus == UIStatus.EMPTY ? VISIBLE : GONE);
+        mEmptyView.setVisibility(mCurrentStatus == UIStatus.EMPTY ? View.VISIBLE : View.GONE);
 
         System.out.println(mCurrentStatus  + "");
     }
@@ -150,13 +150,12 @@ public abstract class UILoader extends FrameLayout {
         return LayoutInflater.from(getContext()).inflate(R.layout.fragment_loading_view, this, false);
     }
 
-    
-    public void setOnRetryClickListener(OnRetryClickListener onRetryClickListener){
+
+    public void setOnRetryClickListener(OnRetryClickListener onRetryClickListener) {
         this.onRetryClickListener = onRetryClickListener;
-        
+
     }
-    
-    
+
 
     public interface OnRetryClickListener {
         void onRetryClick();

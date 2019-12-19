@@ -32,14 +32,16 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull InnerHolder holder, int position) {
+    public void onBindViewHolder(@NonNull InnerHolder holder, final int position) {
         //这里是设置数据
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mOnRecommendItemClickLinstener != null) {
-                    mOnRecommendItemClickLinstener.onItemClick((Integer) v.getTag());
+                    int clickPosition = (int) v.getTag();
+                    //传入position和当前item上的详情信息
+                    mOnRecommendItemClickLinstener.onItemClick(clickPosition, mData.get(clickPosition));
                 }
             }
         });
@@ -67,7 +69,7 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
     }
 
 
-    public class InnerHolder extends RecyclerView.ViewHolder  {
+    public class InnerHolder extends RecyclerView.ViewHolder {
 
         public InnerHolder(@NonNull View itemView) {
             super(itemView);
@@ -103,12 +105,12 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
     }
 
 
-    public void setOnRecommendItemClickLinstener(OnRecommendItemClickLinstener linstener){
+    public void setOnRecommendItemClickLinstener(OnRecommendItemClickLinstener linstener) {
         this.mOnRecommendItemClickLinstener = linstener;
 
     }
 
     public interface OnRecommendItemClickLinstener {
-        void onItemClick(int position);
+        void onItemClick(int position, Album album);
     }
 }
