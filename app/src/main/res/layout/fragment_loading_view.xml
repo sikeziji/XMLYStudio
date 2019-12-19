@@ -5,9 +5,25 @@
     android:orientation="vertical">
 
 
-    <TextView
+
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="正在加载" />
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.example.xmlystudio.views.LoadingView
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="正在玩命加载中.." />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 </RelativeLayout>

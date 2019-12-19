@@ -65,7 +65,6 @@ public class RecommendPresenter implements IRecommendPresenter {
                 //获取数据成功
                 if (gussLikeAlbumList != null) {
                     List<Album> albumList = gussLikeAlbumList.getAlbumList();
-
                     //数据回来之后，就可以更新UI
                     handlerRecommendResult(albumList);
 //                    upRecommendUI(albumList);
@@ -75,8 +74,6 @@ public class RecommendPresenter implements IRecommendPresenter {
             @Override
             public void onError(int i, String s) {
                 //获取数据失败
-                LogUtil.d(TAG, "error ->> " + i);
-                LogUtil.d(TAG, "errorMsg ->> " + s);
                 handlerError();
             }
         });
@@ -99,12 +96,14 @@ public class RecommendPresenter implements IRecommendPresenter {
                 }
             } else {
                 //通知UI更新
-                if (mCallbacks != null) {
+//                if (mCallbacks != null) {
                     for (IRecommendViewCallback callback : mCallbacks) {
                         callback.onRecommendListLoaded(albumList);
-                    }
+//                    }
                 }
             }
+        }else{
+            System.out.println("获取的数据为空");
         }
 
     }
@@ -130,8 +129,7 @@ public class RecommendPresenter implements IRecommendPresenter {
 
     @Override
     public void registerViewCallback(IRecommendViewCallback callback) {
-
-        if (mCallbacks != null && mCallbacks.contains(callback)) {
+        if (mCallbacks != null && !mCallbacks.contains(callback)) {
             mCallbacks.add(callback);
         }
     }

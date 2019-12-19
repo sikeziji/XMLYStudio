@@ -1,5 +1,6 @@
 package com.example.xmlystudio.fragments;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.xmlystudio.DetailActivity;
 import com.example.xmlystudio.R;
 import com.example.xmlystudio.adapter.RecommendListAdapter;
 import com.example.xmlystudio.base.BaseFragment;
 import com.example.xmlystudio.interfaces.IRecommendViewCallback;
 import com.example.xmlystudio.presenters.RecommendPresenter;
+import com.example.xmlystudio.utils.LogUtil;
 import com.example.xmlystudio.views.UILoader;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
 
@@ -21,7 +24,7 @@ import net.lucode.hackware.magicindicator.buildins.UIUtil;
 
 import java.util.List;
 
-public class RecommendFragment extends BaseFragment implements IRecommendViewCallback, UILoader.OnRetryClickListener {
+public class RecommendFragment extends BaseFragment implements IRecommendViewCallback, RecommendListAdapter.OnRecommendItemClickLinstener,UILoader.OnRetryClickListener {
 
     private static final String TAG = "RecommendFragment";
     private View mRootView;
@@ -36,6 +39,7 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
         mUiLoader = new UILoader(getContext()) {
             @Override
             protected View getSuccessView(ViewGroup container) {
+                LogUtil.d(TAG,"创建成功视图");
                 return createSuccessView(inflater, container);
             }
         };
@@ -55,6 +59,9 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
             ((ViewGroup) mUiLoader.getParent()).removeView(mUiLoader);
 
         }
+
+
+        mUiLoader.setOnRetryClickListener(this);
 
         //返回View ，给界面显示
         return mUiLoader;
@@ -89,8 +96,7 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
         recommendListAdapter = new RecommendListAdapter();
         mRecommendRv.setAdapter(recommendListAdapter);
 
-
-        mUiLoader.setOnRetryClickListener(this);
+        recommendListAdapter.setOnRecommendItemClickLinstener(this);
 
         return mRootView;
     }
@@ -112,6 +118,7 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
 
     @Override
     public void onRecommendListLoaded(List<Album> result) {
+        LogUtil.d(TAG,result.toString());
         //获取完成推荐内容，该方法就会被调用成功
         recommendListAdapter.setData(result);
         mUiLoader.updateStatus(UILoader.UIStatus.SUCCESS);
@@ -119,17 +126,20 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
 
     @Override
     public void onNetworkError() {
+        LogUtil.d(TAG,"onNetworkError");
         mUiLoader.updateStatus(UILoader.UIStatus.ERROR);
     }
 
     @Override
     public void onEmpty() {
+        LogUtil.d(TAG,"onEmpty");
         mUiLoader.updateStatus(UILoader.UIStatus.EMPTY);
 
     }
 
     @Override
     public void onLoading() {
+        LogUtil.d(TAG,"onLoading");
         mUiLoader.updateStatus(UILoader.UIStatus.LOADING);
 
     }
@@ -142,5 +152,12 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
             //重新获取数据即可
             mRecommendPresenter.getRecommendList();
         }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        //Item被点击了,跳转到详情界面
+        Intent intent = new Intent(getContext(), DetailActivity.class);
+        startActivity(intent);
     }
 }

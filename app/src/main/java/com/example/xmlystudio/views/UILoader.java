@@ -46,6 +46,7 @@ public abstract class UILoader extends FrameLayout {
 
 
     public void updateStatus(UIStatus status) {
+        System.out.println("状态" + status);
         mCurrentStatus = status;
 
         //更新UI一定要在主线程上执行
@@ -76,7 +77,7 @@ public abstract class UILoader extends FrameLayout {
 
 
         //成功
-        if (mSuccessView != null) {
+        if (mSuccessView == null) {
             mSuccessView = getSuccessView(this);
             addView(mSuccessView);
         }
@@ -85,7 +86,7 @@ public abstract class UILoader extends FrameLayout {
 
 
         //失败
-        if (mNetworkErrorView != null) {
+        if (mNetworkErrorView == null) {
             mNetworkErrorView = getNetworkErrorView();
             addView(mNetworkErrorView);
         }
@@ -94,14 +95,14 @@ public abstract class UILoader extends FrameLayout {
 
 
         //返回数据为空
-        if (mEmptyView != null) {
+        if (mEmptyView == null) {
             mEmptyView = getEmptyView();
             addView(mEmptyView);
         }
         //根据状态设置是否可见
         mEmptyView.setVisibility(mCurrentStatus == UIStatus.EMPTY ? VISIBLE : GONE);
 
-
+        System.out.println(mCurrentStatus  + "");
     }
 
     /**

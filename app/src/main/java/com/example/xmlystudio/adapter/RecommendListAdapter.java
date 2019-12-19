@@ -19,6 +19,7 @@ import java.util.List;
 public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdapter.InnerHolder> {
 
     private List<Album> mData = new ArrayList<>();
+    private OnRecommendItemClickLinstener mOnRecommendItemClickLinstener;
 
 
     @NonNull
@@ -34,8 +35,17 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
     public void onBindViewHolder(@NonNull InnerHolder holder, int position) {
         //这里是设置数据
         holder.itemView.setTag(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnRecommendItemClickLinstener != null) {
+                    mOnRecommendItemClickLinstener.onItemClick((Integer) v.getTag());
+                }
+            }
+        });
         holder.setData(mData.get(position));
     }
+
 
     @Override
     public int getItemCount() {
@@ -57,7 +67,7 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
     }
 
 
-    public class InnerHolder extends RecyclerView.ViewHolder {
+    public class InnerHolder extends RecyclerView.ViewHolder  {
 
         public InnerHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,12 +91,24 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
             //设置描述
             album_description_tv.setText(album.getAlbumIntro());
             //设置播放次数
-            album_play_count.setText(album.getPlayCount()/10000 + "万");
+            album_play_count.setText(album.getPlayCount() / 10000 + "万");
             // 设置专辑数量
             album_content_size.setText(album.getIncludeTrackCount() + "");
 
             //设置图片
             Picasso.with(itemView.getContext()).load(album.getCoverUrlLarge()).into(album_cover);
         }
+
+
+    }
+
+
+    public void setOnRecommendItemClickLinstener(OnRecommendItemClickLinstener linstener){
+        this.mOnRecommendItemClickLinstener = linstener;
+
+    }
+
+    public interface OnRecommendItemClickLinstener {
+        void onItemClick(int position);
     }
 }
