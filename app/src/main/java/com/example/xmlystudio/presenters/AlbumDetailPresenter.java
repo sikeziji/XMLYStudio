@@ -66,10 +66,22 @@ public class AlbumDetailPresenter implements IAlbumDetailPresenter {
 
             @Override
             public void onError(int i, String s) {
-
+                handlerError(i, s);
             }
         });
 
+    }
+
+    /**
+     * 如果发生错我，通知UI
+     * @param errorCode
+     * @param errorMsg
+     */
+    private void handlerError(int errorCode, String errorMsg) {
+
+        for (IAlbumDetialViewCallBack callback : mCallbacks) {
+            callback.OnNetWorkError(errorCode, errorMsg);
+        }
     }
 
     private void handlerAlbumDetailResult(List<Track> tracks) {

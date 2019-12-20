@@ -125,12 +125,12 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+
+    <FrameLayout
+        android:id="@+id/detail_list_container"
         android:layout_width="match_parent"
-        android:id="@+id/album_detail_list"
         android:layout_height="match_parent"
-        android:layout_below="@id/play_control_container"
-        />
+        android:layout_below="@id/play_control_container" />
 
 
 </RelativeLayout>

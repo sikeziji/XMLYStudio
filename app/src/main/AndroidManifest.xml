@@ -33,6 +33,10 @@
 
 
         </activity>
+        <activity android:name=".PlayActivity">
+
+
+        </activity>
     </application>
 
 </manifest>
