@@ -1,8 +1,8 @@
 package com.example.xmlystudio.interfaces;
 
-import com.example.xmlystudio.DetailActivity;
+import com.example.xmlystudio.base.IBasePresenter;
 
-public interface IAlbumDetailPresenter {
+public interface IAlbumDetailPresenter extends IBasePresenter<IAlbumDetialViewCallBack> {
 
     /**
      * 下拉刷新内容
@@ -24,15 +24,5 @@ public interface IAlbumDetailPresenter {
      */
     void getAlumDetail(int albumId,int page);
 
-
-    /**
-     * 注册
-     */
-    void registerViewCallback(IAlbumDetialViewCallBack detialViewCallBack);
-
-    /**
-     * 取消注册
-     */
-    void unRegisterViewCallback(IAlbumDetialViewCallBack detialViewCallBack);
 
 }

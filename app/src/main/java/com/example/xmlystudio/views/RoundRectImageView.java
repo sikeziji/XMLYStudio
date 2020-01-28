@@ -2,14 +2,12 @@ package com.example.xmlystudio.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.RecordingCanvas;
 import android.graphics.RectF;
 
 import android.graphics.Path;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
-import androidx.appcompat.widget.AppCompatImageView;
 
 
 public class RoundRectImageView extends AppCompatImageView {

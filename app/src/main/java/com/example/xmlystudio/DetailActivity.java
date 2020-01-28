@@ -6,6 +6,9 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +16,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.xmlystudio.adapter.DetailListAdapter;
 import com.example.xmlystudio.base.BaseActivity;
 import com.example.xmlystudio.interfaces.IAlbumDetialViewCallBack;
 import com.example.xmlystudio.presenters.AlbumDetailPresenter;
+import com.example.xmlystudio.presenters.PlayerPresenter;
 import com.example.xmlystudio.utils.ImageBlur;
 import com.example.xmlystudio.utils.LogUtil;
 import com.example.xmlystudio.views.RoundRectImageView;
@@ -232,7 +232,11 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
     }
 
     @Override
-    public void onItemClick() {
+    public void onItemClick(List<Track> detailData, int position) {
+
+        //设置播放器的数据
+        PlayerPresenter playerPresenter = PlayerPresenter.getPlayerPresenter();
+        playerPresenter.setPlayList(detailData, position);
         //跳转界面
         Intent intent = new Intent(this, PlayActivity.class);
         startActivity(intent);

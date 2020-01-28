@@ -1,11 +1,10 @@
 package com.example.xmlystudio;
 
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.ViewPager;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 
 import com.example.xmlystudio.adapter.IndicatorAdapter;
 import com.example.xmlystudio.adapter.MainContentAdapter;

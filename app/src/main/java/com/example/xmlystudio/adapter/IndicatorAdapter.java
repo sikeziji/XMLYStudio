@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.view.View;
 
 import com.example.xmlystudio.R;
-import com.ximalaya.ting.android.opensdk.auth.utils.c;
 
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;

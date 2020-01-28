@@ -1,12 +1,11 @@
 package com.example.xmlystudio.adapter;
 
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.xmlystudio.R;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
@@ -35,7 +34,7 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
     }
 
     @Override
-    public void onBindViewHolder(@NonNull InnerHolder holder, int position) {
+    public void onBindViewHolder(@NonNull InnerHolder holder, final int position) {
         //找到控件，设置数据
         View itemView = holder.itemView;
         //顺序ID
@@ -70,7 +69,8 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
             @Override
             public void onClick(View v) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick();
+                    //需要列表和位置
+                    mItemClickListener.onItemClick(mDetailData,position );
                 }
 
             }
@@ -110,6 +110,6 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
     }
 
     public interface ItemClickListener {
-        void onItemClick();
+        void onItemClick(List<Track> detailData, int position);
     }
 }

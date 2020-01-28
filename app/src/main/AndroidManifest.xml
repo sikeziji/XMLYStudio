@@ -2,14 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.xmlystudio">
 
-
+    !--连接网络-->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--用于管理监听网络状态的变化-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--用于管理监听网络状态的变化-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--用于管理监听网络状态的变化-->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <!--获取电话的状态,在打电话的时候暂停播放-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <!--target >=28 需要设置此权限 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
 
     <application
@@ -20,7 +24,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -37,6 +43,11 @@
 
 
         </activity>
+
+
+        <service
+            android:name="com.ximalaya.ting.android.opensdk.player.service.XmPlayerService"
+            android:process=":player" />
     </application>
 
 </manifest>
