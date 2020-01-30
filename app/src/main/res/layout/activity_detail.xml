@@ -56,7 +56,7 @@
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:singleLine="true"
-            android:text="继续播放"
+            android:text="@string/click_play_tips_text"
             android:textSize="14sp" />
 
 

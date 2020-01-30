@@ -282,6 +282,8 @@ public class PlayerPresenter implements IPlayPresenter, IXmAdsStatusListener, IX
         //通知当前的节目
         iPlayerCallback.onTrackUpdate(mCurrentTrack, mCurrentIndex);
         iPlayerCallback.onProgressChange(mCurrentProgressPosition, mProgressDuration);
+        //更新当前状态
+        handlePlayState(iPlayerCallback);
         //从sp里面获取数据
         int modeIndex = mPlayModSp.getInt(PLAY_MODE_SP_KEY, PLAY_MODEL_LIST_INT);
         mCurrentPlayMode = getModeByInt(modeIndex);
@@ -294,7 +296,16 @@ public class PlayerPresenter implements IPlayPresenter, IXmAdsStatusListener, IX
             mIPlayCallbacks.remove(iPlayerCallback);
         }
     }
+    private void handlePlayState(IPlayerCallback iPlayerCallback) {
+        int playerStatus = mPlayerManager.getPlayerStatus();
+        //根据状态调用接口的方法
+        if(PlayerConstants.STATE_STARTED == playerStatus) {
+            iPlayerCallback.onPlayStart();
+        } else {
+            iPlayerCallback.onPlayPause();
+        }
 
+    }
 
     //=============================广告物料 start ========================================
     @Override
@@ -362,13 +373,15 @@ public class PlayerPresenter implements IPlayPresenter, IXmAdsStatusListener, IX
 
     @Override
     public void onSoundPrepared() {
-        if (mPlayerManager.getPlayerStatus() == PlayerConstants.STATE_STARTED) {
+        mPlayerManager.setPlayMode(mCurrentPlayMode);
+        if (mPlayerManager.getPlayerStatus() == PlayerConstants.STATE_PREPARED) {
             //播放器准备完成可以播放了
             mPlayerManager.play();
         }
 
-
     }
+
+
 
     @Override
     public void onSoundSwitch(PlayableModel lastModel, PlayableModel currModel) {

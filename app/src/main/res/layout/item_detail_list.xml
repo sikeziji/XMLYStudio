@@ -3,12 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/album_detail_list"
+    <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/play_control_container" />
+        android:layout_height="match_parent">
 
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/album_detail_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/play_control_container" />
+
+    </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 </FrameLayout>

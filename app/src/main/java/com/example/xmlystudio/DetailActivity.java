@@ -16,9 +16,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.xmlystudio.adapter.DetailListAdapter;
 import com.example.xmlystudio.base.BaseActivity;
+import com.example.xmlystudio.base.BaseApplication;
 import com.example.xmlystudio.interfaces.IAlbumDetialViewCallBack;
 import com.example.xmlystudio.interfaces.IPlayerCallback;
 import com.example.xmlystudio.presenters.AlbumDetailPresenter;
@@ -27,6 +29,9 @@ import com.example.xmlystudio.utils.ImageBlur;
 import com.example.xmlystudio.utils.LogUtil;
 import com.example.xmlystudio.views.RoundRectImageView;
 import com.example.xmlystudio.views.UILoader;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.bezierlayout.BezierLayout;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
@@ -59,6 +64,8 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
     private String mCurrentTrackTitle;
     private List<Track> mCurrentTracks = null;
     private final static int DEFAULT_PLAY_INDEX = 0;
+    private TwinklingRefreshLayout mRefreshLayout;
+    private boolean mIsLoaderMore = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,14 +79,19 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
 
 
         initView();
+        initPresenter();
+        //设置播放状态
+        updatePlaySate(mPlayerPresenter.isPlaying());
+        initListener();
+    }
+
+    private void initPresenter() {
         //播放专辑详情的presenter
         mAlbumDetailPresenter = AlbumDetailPresenter.getInstance();
         mAlbumDetailPresenter.registerViewCallback(this);
         //播放器的presenter
         mPlayerPresenter = PlayerPresenter.getPlayerPresenter();
         mPlayerPresenter.registerViewCallback(this);
-
-        initListener();
     }
 
     private void initView() {
@@ -111,7 +123,7 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
         mPlayControlBtn = this.findViewById(R.id.detail_play_control);
         mPlayControlTips = this.findViewById(R.id.play_control_tv);
 
-
+        mPlayControlTips.setSelected(true);
     }
 
     private void initListener() {
@@ -131,20 +143,6 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
             }
         });
 
-//        mSubBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mSubscriptionPresenter != null) {
-//                    boolean isSub = mSubscriptionPresenter.isSub(mCurrentAlbum);
-//                    //如果没有订阅，就去订阅，如果已经订阅了，那么就取消订阅
-//                    if (isSub) {
-//                        mSubscriptionPresenter.deleteSubscription(mCurrentAlbum);
-//                    } else {
-//                        mSubscriptionPresenter.addSubscription(mCurrentAlbum);
-//                    }
-//                }
-//            }
-//        });
     }
 
     private void handlePlayControl() {
@@ -167,12 +165,10 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
     private View createSuccessView(ViewGroup container) {
 
         View inflate = LayoutInflater.from(this).inflate(R.layout.item_detail_list, container, false);
-
-
         mDetailList = inflate.findViewById(R.id.album_detail_list);
 
         mLayoutManager = new LinearLayoutManager(this);
-
+        mRefreshLayout = inflate.findViewById(R.id.refresh_layout);
         //设置LayoutManger  布局管理器
         mDetailList.setLayoutManager(mLayoutManager);
         //设置适配器
@@ -191,13 +187,45 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
         });
 
         mDetailListAdapter.setItemClickListener(this);
+        //贝塞尔曲线 头部
+        BezierLayout headerView = new BezierLayout(this);
+        mRefreshLayout.setHeaderView(headerView);
+        mRefreshLayout.setMaxHeadHeight(140);
+        mRefreshLayout.setOverScrollBottomShow(false);
+        mRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                super.onRefresh(refreshLayout);
+                BaseApplication.getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(DetailActivity.this, "刷新成功...", Toast.LENGTH_SHORT).show();
+                        mRefreshLayout.finishRefreshing();
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                super.onLoadMore(refreshLayout);
+                //去加载更多的内容
+                if (mAlbumDetailPresenter != null) {
+                    mAlbumDetailPresenter.loadMore();
+                    mIsLoaderMore = true;
+                }
+            }
+        });
         return inflate;
     }
 
 
     @Override
     public void onDetailListLoaded(List<Track> tracks) {
-        System.out.println(tracks.size());
+        if (mIsLoaderMore && mRefreshLayout != null) {
+            mRefreshLayout.finishLoadmore();
+            mIsLoaderMore = false;
+        }
+        this.mCurrentTracks = tracks;
         //判断数据结果、根据结果显示
         if (tracks == null || tracks.size() == 0) {
             //拿数据，显示Loading状态
@@ -207,7 +235,7 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
             }
         }
 
-        this.mCurrentTracks = tracks;
+
         //更新/设置UI
         if (mUiLoader != null) {
             mUiLoader.updateStatus(UILoader.UIStatus.SUCCESS);
