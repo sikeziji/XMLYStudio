@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.example.xmlystudio.adapter.DetailListAdapter;
 import com.example.xmlystudio.base.BaseActivity;
 import com.example.xmlystudio.interfaces.IAlbumDetialViewCallBack;
+import com.example.xmlystudio.interfaces.IPlayerCallback;
 import com.example.xmlystudio.presenters.AlbumDetailPresenter;
 import com.example.xmlystudio.presenters.PlayerPresenter;
 import com.example.xmlystudio.utils.ImageBlur;
@@ -29,12 +31,13 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
+import com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl;
 
 import net.lucode.hackware.magicindicator.buildins.UIUtil;
 
 import java.util.List;
 
-public class DetailActivity extends BaseActivity implements IAlbumDetialViewCallBack, UILoader.OnRetryClickListener, DetailListAdapter.ItemClickListener {
+public class DetailActivity extends BaseActivity implements IAlbumDetialViewCallBack, UILoader.OnRetryClickListener, DetailListAdapter.ItemClickListener, IPlayerCallback {
 
 
     private ImageView mLargeCover;
@@ -50,6 +53,12 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
     private FrameLayout mDetailListContainer;
     private UILoader mUiLoader;
     private long mCurrentId = -1;
+    private ImageView mPlayControlBtn;
+    private TextView mPlayControlTips;
+    private PlayerPresenter mPlayerPresenter;
+    private String mCurrentTrackTitle;
+    private List<Track> mCurrentTracks = null;
+    private final static int DEFAULT_PLAY_INDEX = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,11 +72,14 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
 
 
         initView();
-
-
+        //播放专辑详情的presenter
         mAlbumDetailPresenter = AlbumDetailPresenter.getInstance();
         mAlbumDetailPresenter.registerViewCallback(this);
+        //播放器的presenter
+        mPlayerPresenter = PlayerPresenter.getPlayerPresenter();
+        mPlayerPresenter.registerViewCallback(this);
 
+        initListener();
     }
 
     private void initView() {
@@ -95,10 +107,62 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
         mAlbumAthor = this.findViewById(R.id.tv_album_athor);
 
 
-        //设置数据
+        //播放控制的图标
+        mPlayControlBtn = this.findViewById(R.id.detail_play_control);
+        mPlayControlTips = this.findViewById(R.id.play_control_tv);
 
 
     }
+
+    private void initListener() {
+        mPlayControlBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPlayerPresenter != null) {
+                    //判断播放器是否有播放列表.
+                    boolean has = mPlayerPresenter.hasPlayList();
+                    if (has) {
+                        //控制播放器的状态
+                        handlePlayControl();
+                    } else {
+                        handleNoPlayList();
+                    }
+                }
+            }
+        });
+
+//        mSubBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mSubscriptionPresenter != null) {
+//                    boolean isSub = mSubscriptionPresenter.isSub(mCurrentAlbum);
+//                    //如果没有订阅，就去订阅，如果已经订阅了，那么就取消订阅
+//                    if (isSub) {
+//                        mSubscriptionPresenter.deleteSubscription(mCurrentAlbum);
+//                    } else {
+//                        mSubscriptionPresenter.addSubscription(mCurrentAlbum);
+//                    }
+//                }
+//            }
+//        });
+    }
+
+    private void handlePlayControl() {
+        if (mPlayerPresenter.isPlaying()) {
+            //正播放，那么就暂停
+            mPlayerPresenter.pause();
+        } else {
+            mPlayerPresenter.play();
+        }
+    }
+
+    /**
+     * 当播放器里面没有播放的内容，我们要进行处理一下。
+     */
+    private void handleNoPlayList() {
+        mPlayerPresenter.setPlayList(mCurrentTracks, DEFAULT_PLAY_INDEX);
+    }
+
 
     private View createSuccessView(ViewGroup container) {
 
@@ -143,6 +207,7 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
             }
         }
 
+        this.mCurrentTracks = tracks;
         //更新/设置UI
         if (mUiLoader != null) {
             mUiLoader.updateStatus(UILoader.UIStatus.SUCCESS);
@@ -241,4 +306,97 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
         Intent intent = new Intent(this, PlayActivity.class);
         startActivity(intent);
     }
+
+
+    //=====================================playerPresenter  start========================================
+    @Override
+    public void onPlayStart() {
+        updatePlaySate(true);
+    }
+
+    @Override
+    public void onPlayPause() {
+        updatePlaySate(false);
+    }
+
+    @Override
+    public void onPlayStop() {
+        updatePlaySate(false);
+    }
+
+    /**
+     * 根据播放状态修改图标和文字
+     *
+     * @param playing
+     */
+    private void updatePlaySate(boolean playing) {
+        if (mPlayControlBtn != null && mPlayControlTips != null) {
+            mPlayControlBtn.setImageResource(playing ? R.drawable.selector_play_control_pause : R.drawable.selector_play_control_play);
+            if (!playing) {
+                mPlayControlTips.setText(R.string.click_play_tips_text);
+            } else {
+                if (!TextUtils.isEmpty(mCurrentTrackTitle)) {
+                    mPlayControlTips.setText(mCurrentTrackTitle);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onPlayError() {
+
+    }
+
+    @Override
+    public void nextPlay(Track track) {
+
+    }
+
+    @Override
+    public void onPrePlay(Track track) {
+
+    }
+
+    @Override
+    public void onListLoaded(List<Track> list) {
+
+    }
+
+    @Override
+    public void onPlayModeChange(XmPlayListControl.PlayMode mode) {
+
+    }
+
+    @Override
+    public void onProgressChange(int currentProgress, int total) {
+
+    }
+
+    @Override
+    public void onAdLoading() {
+
+    }
+
+    @Override
+    public void onAdFinished() {
+
+    }
+
+    @Override
+    public void onTrackUpdate(Track track, int playIndex) {
+        if (track != null) {
+            mCurrentTrackTitle = track.getTrackTitle();
+            if (!TextUtils.isEmpty(mCurrentTrackTitle) && mPlayControlTips != null) {
+                mPlayControlTips.setText(mCurrentTrackTitle);
+            }
+        }
+    }
+
+    @Override
+    public void updateListOrder(boolean isReverse) {
+
+    }
+
+
+    //=====================================playerPresenter  end========================================
 }

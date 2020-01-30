@@ -39,7 +39,9 @@ public class PlayerTrackPagerAdapter extends PagerAdapter {
         String coverUrlLarge = track.getCoverUrlLarge();
 
         //用Picasso 设置图片
-        if (item != null) {
+        if (coverUrlLarge.trim().length() == 0) {
+            Picasso.with(container.getContext()).load(R.mipmap.network_error).into(item);
+        } else {
             Picasso.with(container.getContext()).load(coverUrlLarge).into(item);
         }
 

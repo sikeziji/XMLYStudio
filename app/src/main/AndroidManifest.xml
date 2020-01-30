@@ -35,11 +35,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".DetailActivity">
+        <activity android:name=".DetailActivity"
+            android:screenOrientation="portrait">
 
 
         </activity>
-        <activity android:name=".PlayActivity">
+        <activity android:name=".PlayActivity"
+            android:screenOrientation="portrait">
 
 
         </activity>

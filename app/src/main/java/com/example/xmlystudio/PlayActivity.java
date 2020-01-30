@@ -102,7 +102,7 @@ public class PlayActivity extends BaseActivity implements IPlayerCallback, ViewP
             }
         });
         //退出
-        mOutBgAnmator = ValueAnimator.ofFloat(0.7f,1.0f);
+        mOutBgAnmator = ValueAnimator.ofFloat(0.7f, 1.0f);
         mOutBgAnmator.setDuration(mDuration);
         mOutBgAnmator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -137,7 +137,7 @@ public class PlayActivity extends BaseActivity implements IPlayerCallback, ViewP
             public void onClick(View v) {
                 //如果当前的状态是正在播放，那么就暂停
 
-                if (mPlayerPresenter.isPlay()) {
+                if (mPlayerPresenter.isPlaying()) {
                     mPlayerPresenter.pause();
                 } else {
                     //如果当前的状态是非播放，那么就开始播放
@@ -202,15 +202,7 @@ public class PlayActivity extends BaseActivity implements IPlayerCallback, ViewP
         mPlayModeSwitchbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //处理播放模式的切换
-
-                //根据当前的mode 获取到下一个mode
-                XmPlayListControl.PlayMode playMode = sPlayModelRule.get(mCurrentMode);
-                //修改播放模式
-                if (mPlayerPresenter != null) {
-                    mPlayerPresenter.switchPlayMode(playMode);
-                    mCurrentMode = playMode;
-                }
+                switchPlayMode();
             }
         });
 
@@ -232,6 +224,45 @@ public class PlayActivity extends BaseActivity implements IPlayerCallback, ViewP
                 mOutBgAnmator.start();
             }
         });
+
+
+        mSobPopWindow.setPlayListItemClickListener(new SobPopWindow.PlayListItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                //播放列表里的item被点击了。
+                if (mPlayerPresenter != null) {
+                    mPlayerPresenter.playByIndex(position);
+                }
+            }
+        });
+
+        mSobPopWindow.setPlayListActionListener(new SobPopWindow.PlayListActionListener() {
+            @Override
+            public void onPlayModeClick() {
+                //切换播放模式
+                switchPlayMode();
+            }
+
+            @Override
+            public void onOrderClick() {
+                //点击了切换顺序和逆序
+                //Toast.makeText(PlayerActivity.this, "切换列表书序", Toast.LENGTH_SHORT).show();
+                if (mPlayerPresenter != null) {
+                    mPlayerPresenter.reversePlayList();
+                }
+            }
+        });
+    }
+
+    private void switchPlayMode() {
+        //处理播放模式的切换
+        //根据当前的mode 获取到下一个mode
+        XmPlayListControl.PlayMode playMode = sPlayModelRule.get(mCurrentMode);
+        //修改播放模式
+        if (mPlayerPresenter != null) {
+            mPlayerPresenter.switchPlayMode(playMode);
+            mCurrentMode = playMode;
+        }
     }
 
     public void updateBgAlpha(float alpha) {
@@ -366,6 +397,8 @@ public class PlayActivity extends BaseActivity implements IPlayerCallback, ViewP
     public void onPlayModeChange(XmPlayListControl.PlayMode mode) {
         //更新播放模式，并修改UI
         mCurrentMode = mode;
+        //跟新pop里的播放模式
+        mSobPopWindow.updatePlayMode(mCurrentMode);
         updatePlayModeBtnImag();
     }
 
@@ -429,6 +462,11 @@ public class PlayActivity extends BaseActivity implements IPlayerCallback, ViewP
         if (mSobPopWindow != null) {
             mSobPopWindow.setCurrentPlayPosition(playIndex);
         }
+    }
+
+    @Override
+    public void updateListOrder(boolean isReverse) {
+        mSobPopWindow.updateOrderIcon(isReverse);
     }
 
 
