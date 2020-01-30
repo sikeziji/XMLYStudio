@@ -52,7 +52,7 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
         //设置数据
         Track track = mDetailData.get(position);
         //顺序标签
-        orderTvTv.setText(position + "");
+        orderTvTv.setText((position + 1) + "");
         //播放标题
         titleTv.setText(track.getTrackTitle() + "");
         //播放次数

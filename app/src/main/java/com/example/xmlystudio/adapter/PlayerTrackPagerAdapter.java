@@ -1,5 +1,6 @@
 package com.example.xmlystudio.adapter;
 
+import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.xmlystudio.R;
+import com.example.xmlystudio.utils.LogUtil;
 import com.squareup.picasso.Picasso;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
 
@@ -17,6 +19,7 @@ import java.util.List;
 public class PlayerTrackPagerAdapter extends PagerAdapter {
 
 
+    private static final String TAG = "PlayerTrackPagerAdapter";
     private List<Track> mData = new ArrayList<>();
 
 
@@ -36,7 +39,9 @@ public class PlayerTrackPagerAdapter extends PagerAdapter {
         String coverUrlLarge = track.getCoverUrlLarge();
 
         //用Picasso 设置图片
-        Picasso.with(container.getContext()).load(coverUrlLarge).into(item);
+        if (item != null) {
+            Picasso.with(container.getContext()).load(coverUrlLarge).into(item);
+        }
 
         return itemView;
 
