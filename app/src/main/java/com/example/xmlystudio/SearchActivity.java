@@ -84,8 +84,8 @@ public class SearchActivity extends BaseActivity implements ISearchCallback , Al
         //注册UI更新的接口
         mSearchPresenter.registerViewCallback(this);
 
-        //TODO: 去拿热词
-//        mSearchPresenter.getHotWord();
+        //去拿热词
+        mSearchPresenter.getHotWord();
 
     }
 
