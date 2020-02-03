@@ -2,13 +2,16 @@ package com.example.xmlystudio.presenters;
 
 import android.support.annotation.Nullable;
 
+import com.example.xmlystudio.data.XimalayApi;
 import com.example.xmlystudio.interfaces.IAlbumDetailPresenter;
 import com.example.xmlystudio.interfaces.IAlbumDetialViewCallBack;
 import com.example.xmlystudio.utils.Constants;
+import com.example.xmlystudio.utils.LogUtil;
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
 import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
+import com.ximalaya.ting.android.opensdk.model.album.GussLikeAlbumList;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
 import com.ximalaya.ting.android.opensdk.model.track.TrackList;
 
@@ -62,36 +65,47 @@ public class AlbumDetailPresenter implements IAlbumDetailPresenter {
     }
 
     private void doLoaded(final boolean isLoaderMore) {
-        Map<String, String> map = new HashMap<>();
-        map.put(DTransferConstants.SORT, "asc");
-        map.put(DTransferConstants.ALBUM_ID, mCurrentAlbumId + "");
-        map.put(DTransferConstants.PAGE, mCurrentPageIndex + "");
-        map.put(DTransferConstants.PAGE_SIZE, Constants.COUNT_DEFAULT + "");
-        CommonRequest.getTracks(map, new IDataCallBack<TrackList>() {
-            @Override
-            public void onSuccess(TrackList trackList) {
-                if (trackList != null) {
+        XimalayApi ximalayApi = XimalayApi.getXimalayApi();
+       ximalayApi.getAlbumDetail(new IDataCallBack<TrackList>() {
+           @Override
+           public void onSuccess(@Nullable TrackList trackList) {
+               if (trackList != null) {
                     List<Track> tracks = trackList.getTracks();
+                    LogUtil.d(TAG, "tracks size -- > " + tracks.size());
                     if (isLoaderMore) {
-                        //这个是上拉加载，结果放到后面去
-                        mTracks.addAll(mTracks.size() - 1, tracks);
+                        //上拉加载，结果放到后面去
+                        mTracks.addAll(tracks);
+                        int size = tracks.size();
+                        handlerLoaderMoreResult(size);
                     } else {
                         //这个是下拉加载，结果放到前面去
                         mTracks.addAll(0, tracks);
                     }
                     handlerAlbumDetailResult(mTracks);
-
                 }
-            }
+           }
 
-            @Override
-            public void onError(int errorCode, String errorMsg) {
-                if (isLoaderMore) {
+           @Override
+           public void onError(int errorCode, String errorMsg) {
+               if (isLoaderMore) {
                     mCurrentPageIndex--;
                 }
+                LogUtil.d(TAG, "errorCode -- >   " + errorCode);
+                LogUtil.d(TAG, "errorMsg -- >   " + errorMsg);
                 handlerError(errorCode, errorMsg);
-            }
-        });
+           }
+       }, mCurrentAlbumId, mCurrentPageIndex);
+    }
+
+    /**
+     * 处理加载更多的结果
+     *
+     * @param size
+     */
+    private void handlerLoaderMoreResult(int size) {
+        for (IAlbumDetialViewCallBack callback : mCallbacks) {
+            callback.onLoaderMoreFinished(size);
+        }
     }
 
 

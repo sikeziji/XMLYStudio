@@ -46,6 +46,12 @@
 
         </activity>
 
+        <activity
+            android:name=".SearchActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
 
         <service
             android:name="com.ximalaya.ting.android.opensdk.player.service.XmPlayerService"

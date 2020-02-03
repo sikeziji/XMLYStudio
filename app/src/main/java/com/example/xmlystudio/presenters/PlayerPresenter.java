@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.example.xmlystudio.base.BaseApplication;
+import com.example.xmlystudio.data.XimalayApi;
 import com.example.xmlystudio.interfaces.IPlayPresenter;
 import com.example.xmlystudio.interfaces.IPlayerCallback;
 import com.example.xmlystudio.utils.LogUtil;
@@ -236,29 +237,29 @@ public class PlayerPresenter implements IPlayPresenter, IXmAdsStatusListener, IX
     @Override
     public void playByAlbumId(long id) {
         //TODO:
-//        //1、要获取到专辑的列表内容
-//        XimalayApi ximalayApi = XimalayApi.getXimalayApi();
-//        ximalayApi.getAlbumDetail(new IDataCallBack<TrackList>() {
-//            @Override
-//            public void onSuccess(@Nullable TrackList trackList) {
-//                //2、把专辑内容设置给播放器
-//                List<Track> tracks = trackList.getTracks();
-//                if(trackList != null && tracks.size() > 0) {
-//                    mPlayerManager.setPlayList(tracks,DEFAULT_PLAY_INDEX);
-//                    isPlayListSet = true;
-//                    mCurrentTrack = tracks.get(DEFAULT_PLAY_INDEX);
-//                    mCurrentIndex = DEFAULT_PLAY_INDEX;
-//                }
-//            }
-//
-//            @Override
-//            public void onError(int errorCode,String errorMsg) {
-//                LogUtil.d(TAG,"errorCode -- > " + errorCode);
-//                LogUtil.d(TAG,"errorMsg -- > " + errorMsg);
-//                Toast.makeText(BaseApplication.getAppContext(),"请求数据错误...",Toast.LENGTH_SHORT).show();
-//            }
-//        },(int) id,1);
-//        //3、播放了..
+        //1、要获取到专辑的列表内容
+        XimalayApi ximalayApi = XimalayApi.getXimalayApi();
+        ximalayApi.getAlbumDetail(new IDataCallBack<TrackList>() {
+            @Override
+            public void onSuccess(@Nullable TrackList trackList) {
+                //2、把专辑内容设置给播放器
+                List<Track> tracks = trackList.getTracks();
+                if(trackList != null && tracks.size() > 0) {
+                    mPlayerManager.setPlayList(tracks,DEFAULT_PLAY_INDEX);
+                    isPlayListSet = true;
+                    mCurrentTrack = tracks.get(DEFAULT_PLAY_INDEX);
+                    mCurrentIndex = DEFAULT_PLAY_INDEX;
+                }
+            }
+
+            @Override
+            public void onError(int errorCode,String errorMsg) {
+                LogUtil.d(TAG,"errorCode -- > " + errorCode);
+                LogUtil.d(TAG,"errorMsg -- > " + errorMsg);
+                Toast.makeText(BaseApplication.getAppContext(),"请求数据错误...",Toast.LENGTH_SHORT).show();
+            }
+        },(int) id,1);
+        //3、播放了..
     }
 
     /**
