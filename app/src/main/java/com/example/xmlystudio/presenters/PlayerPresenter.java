@@ -391,7 +391,11 @@ public class PlayerPresenter implements IPlayPresenter, IXmAdsStatusListener, IX
         if (currModel instanceof Track) {
             Track currentTrack = (Track) currModel;
             mCurrentTrack = currentTrack;
-            //跟新UI
+
+            //保存播放记录
+            HistoryPresenter historyPresenter = HistoryPresenter.getHistoryPresenter();
+            historyPresenter.addHistory(currentTrack);
+            //更新UI
             for (IPlayerCallback iPlayPresenter : mIPlayCallbacks) {
                 iPlayPresenter.onTrackUpdate(mCurrentTrack, mCurrentIndex);
             }
