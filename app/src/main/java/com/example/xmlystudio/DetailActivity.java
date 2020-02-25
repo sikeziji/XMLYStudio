@@ -44,6 +44,7 @@ import com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl;
 
 import net.lucode.hackware.magicindicator.buildins.UIUtil;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class DetailActivity extends BaseActivity implements IAlbumDetialViewCallBack, UILoader.OnRetryClickListener,
@@ -151,6 +152,7 @@ public class DetailActivity extends BaseActivity implements IAlbumDetialViewCall
         //订阅按钮
         mSubBtn = this.findViewById(R.id.detail_sub_btn);
     }
+
 
     private void initListener() {
         mPlayControlBtn.setOnClickListener(new View.OnClickListener() {
